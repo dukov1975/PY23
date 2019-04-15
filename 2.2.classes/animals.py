@@ -1,11 +1,8 @@
 class Animal:
 
-    animal_name = ''
-    animal_weight = 0
-
     def __init__(self, name, weight):
         self.animal_name = name
-        self.animal_weight = weight
+        self.animal_weight = int(weight)
 
     @property
     def get_name(self):
@@ -131,9 +128,14 @@ animals = [Cow('Манька', 320),
            ]
 
 total_weigth = 0
-
+max_weigth = Cow('',0)
 for animal_item in animals:
+    total_weigth += animal_item.get_weigth
     print('Тип:', animal_item.type_of, ', Имя:', animal_item.get_name,
           ', Вес:', animal_item.get_weigth, 'кг, Действие:', animal_item.to_feed,
           ', Итого:', animal_item.product, ', Голос:', animal_item.voice, sep='')
+    if  animal_item.get_weigth > max_weigth.get_weigth:
+        max_weigth = animal_item
 
+print('\nВсего кг:', total_weigth)
+print('\nСамое тяжелое животное Тип:', max_weigth.type_of, 'Имя:', max_weigth.get_name, 'Вес:', max_weigth.get_weigth)
