@@ -29,7 +29,7 @@ class Trim:
 
     @property
     def product(self):
-        return 'Стрич'
+        return 'Подстрич'
 
 class Egg:
 
