@@ -5,6 +5,14 @@ class Animal:
         self.animal_weight = int(weight)
 
     @property
+    def get_name(self):
+        return self.animal_name
+
+    @property
+    def get_weigth(self):
+        return self.animal_weight
+
+    @property
     def to_feed(self):
         return 'Покормить'
 
@@ -24,10 +32,13 @@ class Egg:
 
     @property
     def product(self):
-         return 'Собрать яйца'
+        return 'Собрать яйца'
 
 
 class Cow(Animal, Milk):
+
+    def __init__(self, name, weight):
+        super().__init__(name, weight)
 
     @property
     def voice(self):
@@ -39,6 +50,9 @@ class Cow(Animal, Milk):
 
 class Goose(Animal, Egg):
 
+    def __init__(self, name, weight):
+        super().__init__(name, weight)
+
     @property
     def voice(self):
         return 'Га-Га'
@@ -49,6 +63,9 @@ class Goose(Animal, Egg):
 
 class Ship(Animal, Trim):
 
+    def __init__(self, name, weight):
+        super().__init__(name, weight)
+
     @property
     def voice(self):
         return 'Бе-бе'
@@ -58,6 +75,9 @@ class Ship(Animal, Trim):
         return 'Овца'
 
 class Chicken(Animal, Egg):
+
+    def __init__(self, name, weight):
+        super().__init__(name, weight)
 
     @property
     def voice(self):
@@ -70,6 +90,9 @@ class Chicken(Animal, Egg):
 
 class Goat(Animal, Milk):
 
+    def __init__(self, name, weight):
+        super().__init__(name, weight)
+
     @property
     def voice(self):
         return 'Ме-ме'
@@ -80,6 +103,9 @@ class Goat(Animal, Milk):
 
 class Duck(Animal, Egg):
 
+    def __init__(self, name, weight):
+        super().__init__(name, weight)
+
     @property
     def voice(self):
         return 'Кря-кря'
@@ -87,6 +113,7 @@ class Duck(Animal, Egg):
     @property
     def type_of(self):
         return 'Утка'
+
 
 animals = [Cow('Манька', 320),
            Goose('Серый', 7),
@@ -101,14 +128,14 @@ animals = [Cow('Манька', 320),
            ]
 
 total_weigth = 0
-max_weigth = Cow('', 0)
+max_weigth = Cow('',0)
 for animal_item in animals:
-    total_weigth += animal_item.animal_weight
-    print('Тип:', animal_item.type_of, ', Имя:', animal_item.animal_name,
-          ', Вес:', animal_item.animal_weight, 'кг, Действие:', animal_item.to_feed,
+    total_weigth += animal_item.get_weigth
+    print('Тип:', animal_item.type_of, ', Имя:', animal_item.get_name,
+          ', Вес:', animal_item.get_weigth, 'кг, Действие:', animal_item.to_feed,
           ', Итого:', animal_item.product, ', Голос:', animal_item.voice, sep='')
-    if animal_item.animal_weight > max_weigth.animal_weight:
+    if  animal_item.get_weigth > max_weigth.get_weigth:
         max_weigth = animal_item
 
 print('\nВсего кг:', total_weigth)
-print('\nСамое тяжелое животное Тип:', max_weigth.type_of, 'Имя:', max_weigth.animal_name, 'Вес:', max_weigth.animal_weight)
+print('\nСамое тяжелое животное Тип:', max_weigth.type_of, 'Имя:', max_weigth.get_name, 'Вес:', max_weigth.get_weigth)
