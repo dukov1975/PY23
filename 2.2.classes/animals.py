@@ -107,7 +107,7 @@ for animal_item in animals:
     print('Тип:', animal_item.type_of, ', Имя:', animal_item.animal_name,
           ', Вес:', animal_item.animal_weight, 'кг, Действие:', animal_item.to_feed,
           ', Итого:', animal_item.product, ', Голос:', animal_item.voice, sep='')
-    if  animal_item.animal_weight > max_weigth.animal_weight:
+    if animal_item.animal_weight > max_weigth.animal_weight:
         max_weigth = animal_item
 
 print('\nВсего кг:', total_weigth)
