@@ -101,7 +101,7 @@ animals = [Cow('Манька', 320),
            ]
 
 total_weigth = 0
-max_weigth = Cow('',0)
+max_weigth = Cow('', 0)
 for animal_item in animals:
     total_weigth += animal_item.animal_weight
     print('Тип:', animal_item.type_of, ', Имя:', animal_item.animal_name,
