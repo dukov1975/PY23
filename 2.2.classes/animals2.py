@@ -6,6 +6,7 @@ class Voice:
     def voice(self):
         return self.__type_voices.get(type(self).__name__)
 
+
 class Production(Voice):
 
     __type_production = {'Подоить': ['Cow', 'Goat'], 'Собрать яйца': ['Goose', 'Chicken', 'Duck'], 'Подстрич': ['Ship']}
@@ -21,6 +22,7 @@ class Production(Voice):
 
     def __init__(self):
         super().__init__()
+
 
 class Animal(Production):
 
@@ -39,16 +41,27 @@ class Animal(Production):
     def to_feed(self):
         return 'Покормить'
 
+
 class Cow(Animal):
     pass
+
+
 class Goose(Animal):
     pass
+
+
 class Ship(Animal):
     pass
+
+
 class Chicken(Animal):
     pass
+
+
 class Goat(Animal):
     pass
+
+
 class Duck(Animal):
     pass
 
