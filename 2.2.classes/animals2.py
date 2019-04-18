@@ -68,9 +68,9 @@ total_weigth = 0
 max_weigth = Cow('', 0)
 for animal_item in animals:
     total_weigth += animal_item.animal_weigth
-    print('Тип:', animal_item.type_of, ', Имя:', animal_item.animal_name,
-          ', Вес:', animal_item.animal_weigth, 'кг, Действие:', animal_item.to_feed,
-          ', Итого:', animal_item.production, ', Голос:', animal_item.voice, sep='')
+    print('Тип:{} Имя:{} Вес:{}кг Действие:{} Итого:{} Голос:{}'.format(
+                                    animal_item.type_of, animal_item.animal_name, animal_item.animal_weigth,
+                                    animal_item.to_feed, animal_item.production, animal_item.voice))
     if  animal_item.animal_weigth > max_weigth.animal_weigth:
         max_weigth = animal_item
 
