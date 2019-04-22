@@ -7,6 +7,6 @@ documents = [
 
 for item in documents:
     try:
-            print(item['name'])
+        print(item['name'])
     except KeyError:
         print('Поле Name отсутствует')
