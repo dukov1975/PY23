@@ -15,10 +15,17 @@ try:
 
     result = 0
 
-    assert (action in '+-/*'), 'NotFoundAction'
+    if len(str_list) != 3:
+        raise WrongArgument('')
 
+    # тут был явный косяк, на скорую руку
+    assert (action in ['+', '-', '/', '*']), 'NotFoundAction'
+
+    # демонстрация знания в двух экзеплярах
+    # Пример 1
     assert (str_list[1].isdigit()), 'NotDigit'
 
+    # Пример 2, естественно в в реальном проекте все будет унифицировано и под одним знаменателем
     if not str_list[2].isdigit():
         raise NoDigit('')
 
@@ -42,6 +49,7 @@ except ValueError:
     print('Неправильный тип данных')
 except ZeroDivisionError:
     print('Деление на ноль')
+    # так же в реальной жизни писать не буду, демонстрация знания предмета во всех направлениях
 except Exception as e:
     if e.args[0] == 'NotFoundAction':
         print('Отсутствует операция над числами')
