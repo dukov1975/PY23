@@ -1,8 +1,7 @@
-
 import datetime
 
-class Estimate:
 
+class Estimate:
 
     def __init__(self, date_now):
         self.start_time = date_now
