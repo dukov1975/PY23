@@ -13,7 +13,6 @@ def get_cook_book():
                 tmp_recipe = line.strip('\n')
                 cook_book[tmp_recipe] = list()
                 read_header = True
-                tmp_list = []
 
             # чтение количества
             elif not read_qty:
