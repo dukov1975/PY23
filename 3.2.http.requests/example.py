@@ -38,7 +38,7 @@ for file_name in os.listdir():
             for line in source_file:
                 if line not in '\n':
                     text_to_write.append(translate_it(line, to_lang.lower()))
-        write_file = f'{to_lang}_translate.txt'
+        write_file = f'{to_lang}_translate'
         with open(write_file, 'w+') as write_translate:
             for write_line in text_to_write:
                 write_translate.write(write_line)
