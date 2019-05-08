@@ -5,7 +5,7 @@ import os
 API_KEY = 'trnsl.1.1.20190502T142635Z.78342a3a8ef9e1da.225624bfb31ad38bba3ad3c8e39a794cf401cf76'
 URL = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
 
-def translate_it(text, to_lang):
+def translate_it(text, from_lang,to_lang='ru'):
     """
     https://translate.yandex.net/api/v1.5/tr.json/translate ?
     key=<API-ключ>
@@ -22,23 +22,30 @@ def translate_it(text, to_lang):
     params = {
         'key': API_KEY,
         'text': text,
-        'lang': '{}-ru'.format(to_lang),
+        'lang': '{}-{}'.format(from_lang, to_lang),
     }
 
     response = requests.get(URL, params=params)
     json_ = response.json()
-    print(json_)
+    # print(json_)
     return ''.join(json_['text'])
-
-for file_name in os.listdir():
-    if file_name.endswith('.txt'):
-        to_lang = file_name[:2]
-        text_to_write = []
-        with open(file_name) as source_file:
-            for line in source_file:
-                if line not in '\n':
-                    text_to_write.append(translate_it(line, to_lang.lower()))
-        write_file = f'{to_lang}_translate'
+while True:
+    print('Список доступных файлов для перевода:')
+    for file_name in os.listdir():
+        if file_name.endswith('.txt'):
+            print(file_name)
+    file_name = input('Имя файла:')
+    from_lang = input('С какого перевести (de,es,fr):')
+    to_lang = input('На какой перевести (ru,cz,it)')
+    text_to_write = []
+    with open(file_name) as source_file:
+        for line in source_file:
+            if line not in '\n':
+                if to_lang != '':
+                    text_to_write.append(translate_it(line, from_lang.lower(), to_lang.lower()))
+                else:
+                    text_to_write.append(translate_it(line, from_lang.lower()))
+        write_file = f'{from_lang}_translate'
         with open(write_file, 'w+') as write_translate:
             for write_line in text_to_write:
                 write_translate.write(write_line)
