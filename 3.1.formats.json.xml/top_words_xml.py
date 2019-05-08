@@ -1,6 +1,12 @@
 import xml.etree.ElementTree as ET
 
 
+
+def alphabet(alpha):
+    # alpha[0].upper()
+    return alpha[0].lower()
+
+
 tree = ET.parse('newsafr.xml')
 items = tree.findall('channel/item')
 all_words = []
@@ -20,5 +26,8 @@ for key, value in sorted(top_words.items(), key=lambda item: item[1], reverse=Tr
     if i > 10:
         break
     print(f'{i}. {key} - {value}')
-sorted_alphabet.sort()
-print(sorted_alphabet)
+
+alpha_pipec = sorted(sorted_alphabet, key=alphabet)
+
+for item in alpha_pipec:
+    print(item)
