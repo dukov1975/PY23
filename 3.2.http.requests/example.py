@@ -29,6 +29,7 @@ def translate_it(text, from_lang,to_lang='ru'):
     json_ = response.json()
     # print(json_)
     return ''.join(json_['text'])
+
 while True:
     print('Список доступных файлов для перевода:')
     for file_name in os.listdir():
