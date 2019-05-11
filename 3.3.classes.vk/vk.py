@@ -3,16 +3,14 @@ import requests
 
 
 class vk_api:
-    access_token = ''
-    url = 'https://api.vk.com/method'
-    client_id = ''
-    version = 5.52
-    user = {}
 
-    def __init__(self, access_token, client_id):
+    def __init__(self, client_id):
 
-        self.access_token = access_token
         self.client_id = client_id
+        self.url = 'https://api.vk.com/method'
+        self.version = 5.52
+        self.user = {}
+        self.access_token = 'dde2217f5c5342e0a309e2d7f532529e78b63ea56427d595336adaa2d9040e92eabf86c6ac577bb65354b'
 
     def __request(self, method, params):
 
@@ -86,9 +84,13 @@ class vk_api:
 
 class vk_user:
 
-    def __init__(self, json_result):
+    def __init__(self, json_result, vk_connect):
         self.user_json = json_result
         self.relation_users = []
+        self.vk_api_connect = vk_connect
+        relations = vk_connect.relation(self.user_json['id'])
+        for item_relation in relations:
+            self.relation_users.append(vk_connect.userinfo(item_relation))
 
     def id(self):
         return self.user_json['id']
@@ -99,28 +101,22 @@ class vk_user:
     def last_name(self):
         return self.user_json['last_name']
 
-    def add(self, relate_user):
-        self.relation_users.append(relate_user)
-
     def relation(self):
         return self.relation_users
 
 
 def main():
-    vk = vk_api('39ff0bb9c949cbcc08808c48a4eeae91adb4f50803bd7bbaab6e2975173541e59235492b5d2009a0a5436', '6978871')
-    owner = vk_user(vk.auth())
+    vk = vk_api('6978871')
+    print('Опознование самого себя ...')
+    owner = vk_user(vk.auth(), vk)
     vk_users = []
 
     if owner.id != '':
-        friends = vk.friends()
-        for item_friend in friends:
-            print(item_friend.get('id'), item_friend.get('first_name'), item_friend.get('last_name'))
-            vk_item = vk_user(item_friend)
-            relations = vk.relation(item_friend.get('id'))
-            for item_relation in relations:
-                vk_item.add(vk.userinfo(item_relation))
-            vk_users.append(vk_item)
-
+        print('Опознание друзей ...')
+        for item_friend in vk.friends():
+            # print(item_friend.get('id'), item_friend.get('first_name'), item_friend.get('last_name'))
+            vk_users.append(vk_user(item_friend, vk))
+        vk_users.append(owner)
     else:
         print('В этот раз не прокатило ... :-(')
 
