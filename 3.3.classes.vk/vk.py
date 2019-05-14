@@ -114,7 +114,6 @@ def main():
     if owner.id != '':
         print('Опознание друзей ...')
         for item_friend in vk.friends():
-            # print(item_friend.get('id'), item_friend.get('first_name'), item_friend.get('last_name'))
             vk_users.append(vk_user(item_friend, vk))
         vk_users.append(owner)
     else:

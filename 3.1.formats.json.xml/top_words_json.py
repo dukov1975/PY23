@@ -1,10 +1,5 @@
 import json
 
-def alphabet(alpha):
-    # alpha[0].upper()
-    return alpha[0].lower()
-
-
 with open('newsafr.json') as file:
     json_dict = json.load(file)
     news = json_dict['rss']['channel']['items']
@@ -14,7 +9,7 @@ top_words = dict()
 for item in descript:
     for word in item:
         if len(word) > 6:
-            all_words.append(word)
+            all_words.append(word.lower())
 for word in all_words:
     top_words[word] = all_words.count(word)
 i = 0
@@ -26,10 +21,6 @@ for key, value in sorted(top_words.items(), key=lambda item: item[1], reverse=Tr
         break
     print(f'{i}. {key} - {value}')
 
-# про сортировку не понял - вроде ее небыло в задании по алфавиту ?
-alpha_pipec = sorted(sorted_alphabet, key=alphabet)
 
-for item in alpha_pipec:
-    print(item)
 
 
