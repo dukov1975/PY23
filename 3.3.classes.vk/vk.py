@@ -10,7 +10,7 @@ class Vk_api:
         self.url = 'https://api.vk.com/method'
         self.version = 5.52
         self.user = {}
-        self.access_token = 'e000062e5efeefbfcaed6b5b0c78c68d9ac203b892f54489db4cc9f3008c9e2c87591358309c70796c070'
+        self.access_token = '0731d4ac34877e181ee8879d1821a362417d73511643e12c7105a38301a1e8a8671e7e60c723cb52a4e29'
 
     def __request(self, method, params):
 
@@ -92,6 +92,20 @@ class Vk_user:
         for item_relation in relations:
             self.relation_users.append(Vk_user_relation(vk_connect.userinfo(item_relation)))
 
+    def __and__(self, other):
+        return_list_mutal = []
+        for relate in self.relation():
+            for compare in other.relation():
+                if relate == compare:
+                    return_list_mutal.append(relate)
+        return return_list_mutal
+
+    def __ne__(self, other):
+        return self.id() != other.id()
+
+    def __eq__(self, other):
+        return self.id() == other.id()
+
     def id(self):
         return self.user_json['id']
 
@@ -129,10 +143,15 @@ def main():
     else:
         print('В этот раз не прокатило ... :-(')
 
+    list_to_compare = vk_users
+
     for item in vk_users:
-        print(item)
-        for item_relation in item.relation():
-            print('\t', item_relation)
+        for item_compare in list_to_compare:
+            if item != item_compare:
+                print(item, '<-*->', item_compare)
+                mutal_user_list = item & item_compare
+                for print_user_mutal in mutal_user_list:
+                    print('\t', print_user_mutal)
 
 
 if __name__ == '__main__':
