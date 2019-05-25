@@ -115,7 +115,7 @@ class Vk_user:
         self._friends = []
         self._groups = vk_connect.groups(self.id())
         print('Жертва :', self.first_name(), self.last_name())
-        print('Группы жертвы:', self._groups)
+        print('Группы жертвы кол-во:', len(self._groups))
         all_friends = vk_connect.friends()
         i = 0
         friend_count = len(all_friends)
