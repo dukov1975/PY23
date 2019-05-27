@@ -3,7 +3,6 @@ import json
 import base64
 from time import sleep
 
-
 class Vk_api:
 
     def __init__(self):
