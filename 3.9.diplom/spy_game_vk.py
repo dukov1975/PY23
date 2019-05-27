@@ -1,5 +1,6 @@
 import requests
 import json
+import base64
 from time import sleep
 
 
@@ -10,7 +11,11 @@ class Vk_api:
         self.url = 'https://api.vk.com/method'
         self.version = 5.52
         self.user = ''
-        self.access_token = '73eaea320bdc0d3299faa475c196cfea1c4df9da4c6d291633f9fe8f83c08c4de2a3abf89fbc3ed8a44e1'
+        self.access_token = ''
+        self.respond_success = True
+        with open('token') as token:
+            coded_token = token.readline()
+            self.access_token = base64.b64decode(coded_token).decode('utf-8')
 
     def __request(self, method, params):
 
@@ -44,9 +49,16 @@ class Vk_api:
             'v': self.version,
             'access_token': self.access_token
         }
-        sleep(0.5)
-        data = self.__request('/friends.get', params)
-        friends_get = data['response']['items']
+
+        while self.respond_success:
+            try:
+                data = self.__request('/friends.get', params)
+                friends_get = data['response']['items']
+                self.respond_success = False
+            except Exception:
+                print('Ошибка в получении данных ...')
+                sleep(0.5)
+        self.respond_success = True
 
         return friends_get
 
@@ -57,14 +69,18 @@ class Vk_api:
             'v': self.version,
             'access_token': self.access_token
         }
-        sleep(0.5)
-        data = self.__request('/users.get', params)
-
-        if len(data['response']) == 0:
-            data = {}
-        else:
-            data = data['response'][0]
-            self.user = data['id']
+        while self.respond_success:
+            try:
+                data = self.__request('/users.get', params)
+                if len(data['response']) == 0:
+                    data = {}
+                else:
+                    data = data['response'][0]
+                    self.user = data['id']
+            except Exception:
+                    print('Ошибка в получении данных ...')
+                    sleep(0.5)
+        self.respond_success = True
 
         return data
 
@@ -76,14 +92,17 @@ class Vk_api:
             'access_token': self.access_token
         }
 
-        sleep(0.5)
-        data = self.__request('/groups.get', params)
-        try:
-
-            groups_get = data['response']['items']
-
-        except Exception:
-            groups_get = []
+        while self.respond_success:
+            try:
+                data = self.__request('/groups.get', params)
+                try:
+                    groups_get = data['response']['items']
+                except Exception:
+                    groups_get = []
+            except Exception:
+                print('Ошибка в получении данных ...')
+                sleep(0.5)
+        self.respond_success = True
 
         return groups_get
 
@@ -96,14 +115,19 @@ class Vk_api:
             'access_token': self.access_token
         }
 
-        sleep(0.5)
-        data = self.__request('/groups.getById', params)
-        try:
+        while self.respond_success:
+            try:
+                data = self.__request('/groups.getById', params)
+                try:
 
-            groups_get = data['response'][0]
+                    groups_get = data['response'][0]
 
-        except Exception:
-            groups_get = {}
+                except Exception:
+                    groups_get = {}
+            except Exception:
+                print('Ошибка в получении данных ...')
+                sleep(0.5)
+            self.respond_success = True
 
         return groups_get
 
