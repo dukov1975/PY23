@@ -26,7 +26,7 @@ class Vk_api:
         if result_api.status_code == 200:
             data = result_api.json()
         else:
-            print('Что-то пошло не так ...')
+            print('Что-то пошло не так ...', result_api)
 
         return data
 
@@ -50,15 +50,9 @@ class Vk_api:
             'access_token': self.access_token
         }
 
-        while self.respond_success:
-            try:
-                data = self.__request('/friends.get', params)
-                friends_get = data['response']['items']
-                self.respond_success = False
-            except Exception:
-                print('Ошибка в получении данных ...')
-                sleep(0.5)
-        self.respond_success = True
+        data = self.__request('/friends.get', params)
+        friends_get = data['response']['items']
+
 
         return friends_get
 
@@ -69,19 +63,13 @@ class Vk_api:
             'v': self.version,
             'access_token': self.access_token
         }
-        while self.respond_success:
-            try:
-                data = self.__request('/users.get', params)
-                if len(data['response']) == 0:
-                    data = {}
-                else:
-                    data = data['response'][0]
-                    self.user = data['id']
-                self.respond_success = False
-            except Exception:
-                    print('Ошибка в получении данных ...')
-                    sleep(0.5)
-        self.respond_success = True
+
+        data = self.__request('/users.get', params)
+        try:
+            data = data['response'][0]
+            self.user = data['id']
+        except KeyError:
+            data = {}
 
         return data
 
@@ -94,16 +82,19 @@ class Vk_api:
         }
 
         while self.respond_success:
+
+            data = self.__request('/groups.get', params)
             try:
-                data = self.__request('/groups.get', params)
-                try:
-                    groups_get = data['response']['items']
-                except Exception:
-                    groups_get = []
+                groups_get = data['response']['items']
                 self.respond_success = False
-            except Exception:
-                print('Ошибка в получении данных ...')
-                sleep(0.5)
+            except KeyError:
+                # print(data)
+                if data['error']['error_code'] == 6:
+                    sleep(0.5)
+                else:
+                    groups_get = []
+                    self.respond_success = False
+
         self.respond_success = True
 
         return groups_get
@@ -116,19 +107,18 @@ class Vk_api:
             'v': self.version,
             'access_token': self.access_token
         }
-
+        groups_get = {}
         while self.respond_success:
+            data = self.__request('/groups.getById', params)
+            # print('group_info', data)
             try:
-                data = self.__request('/groups.getById', params)
-                try:
-                    groups_get = data['response'][0]
-                except Exception:
-                    groups_get = {}
+                groups_get = data['response'][0]
                 self.respond_success = False
-            except Exception:
-                print('Ошибка в получении данных ...')
+            except KeyError:
                 sleep(0.5)
-            self.respond_success = True
+                groups_get = {}
+
+        self.respond_success = True
 
         return groups_get
 
@@ -136,18 +126,20 @@ class Vk_api:
 class Vk_user:
 
     def __init__(self, json_result, vk_connect):
-        self.user_json = json_result
         self._friends = []
-        self._groups = vk_connect.groups(self.id())
-        print('Жертва :', self.first_name(), self.last_name())
-        print('Группы жертвы кол-во:', len(self._groups))
-        all_friends = vk_connect.friends()
-        i = 0
-        friend_count = len(all_friends)
-        for friend in all_friends:
-            print(f'\rПолучаем друзей с группами : {int(100.0 / friend_count * i)}%', end='')
-            self._friends.append(Vk_friends(friend, vk_connect))
-            i += 1
+        self._groups = []
+        if len(json_result) > 0:
+            self.user_json = json_result
+            self._groups = vk_connect.groups(self.id())
+            print('Жертва :', self.first_name(), self.last_name())
+            print('Группы жертвы кол-во:', len(self._groups))
+            all_friends = vk_connect.friends()
+            i = 0
+            friend_count = len(all_friends)
+            for friend in all_friends:
+                print(f'\rПолучаем друзей с группами : {int(100.0 / friend_count * i)}%', end='')
+                self._friends.append(Vk_friends(friend, vk_connect))
+                i += 1
 
     def __ne__(self, other):
         return self.id() != other.id()
@@ -191,9 +183,8 @@ def main():
             group_counters = {}
             user_id = input('Введите имя или ID жертвы:')
             print('Начат сбор информации ...')
-
-            try:
-                victim = Vk_user(vkapi.user_info(user_id), vkapi)
+            victim = Vk_user(vkapi.user_info(user_id), vkapi)
+            if len(victim.friends()) > 0:
                 for grp_id in victim.groups():
                     group_counters[grp_id] = 0
                 print('\nРазбор и запись в формат JSON')
@@ -201,9 +192,7 @@ def main():
                     if len(friend.groups()) != 0:
                         for group_id in victim.groups():
                             group_counters[group_id] = group_counters[group_id] + friend.groups().count(group_id)
-
                 to_json = []
-
                 for group_json in group_counters:
                     if group_counters[group_json] == 0:
                         new_group = vkapi.group_info(group_json)
@@ -212,9 +201,8 @@ def main():
 
                 with open('groups.json', mode='w', encoding='utf-8') as json_write:
                     json.dump(to_json, json_write, indent=4, ensure_ascii=False)
-
-            except Exception:
-                print('Наверно что-то ввели не так !!!')
+            else:
+                print('Что-то пошло не так ...')
 
     except KeyboardInterrupt:
         print('\r', 'Выход из программы')
