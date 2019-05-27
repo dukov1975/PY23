@@ -77,6 +77,7 @@ class Vk_api:
                 else:
                     data = data['response'][0]
                     self.user = data['id']
+                self.respond_success = False
             except Exception:
                     print('Ошибка в получении данных ...')
                     sleep(0.5)
@@ -99,6 +100,7 @@ class Vk_api:
                     groups_get = data['response']['items']
                 except Exception:
                     groups_get = []
+                self.respond_success = False
             except Exception:
                 print('Ошибка в получении данных ...')
                 sleep(0.5)
@@ -119,11 +121,10 @@ class Vk_api:
             try:
                 data = self.__request('/groups.getById', params)
                 try:
-
                     groups_get = data['response'][0]
-
                 except Exception:
                     groups_get = {}
+                self.respond_success = False
             except Exception:
                 print('Ошибка в получении данных ...')
                 sleep(0.5)
